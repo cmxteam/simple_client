@@ -19,7 +19,7 @@ class ApiClient(object):
         self.auth_secret = auth_secret
         self.path = None
         self.api_prefix = '/api/v2'
-        self.api_host = api_host or 'http://localhost:8000'
+        self.api_host = 'https://coin.mx'
 
     def _build_query(self, req={}):
         post_data = urlencode(req) or None
@@ -43,11 +43,12 @@ class ApiClient(object):
         data, headers = self._build_query(args)
         if req_type == 'GET':
             req = urllib2.Request(self.api_host + self.path + '?' + data, headers=headers)
+            res = urllib2.urlopen(req, timeout=60)
         else:
             req = urllib2.Request(self.api_host + self.path, data, headers=headers)
+            res = urllib2.urlopen(req, data=data, timeout=60)
         if req_type:
             req.get_method = lambda: req_type
-        res = urllib2.urlopen(req, data, 60)
         result = json.load(res)
         if isinstance(result, dict) and 'invalid nonce' in result.get('error', '') and not inner:
             self.nonce = result['nonce']
@@ -122,9 +123,9 @@ class ApiClient(object):
 
 
 if __name__ == '__main__':
-    auth_key = '86a6a2e66e586bf937cc'
-    secret = 'ebef82aa5cf823a8751132daa948161cfb60f77a'
-    client = ApiClient(auth_key, secret, api_host='https://coin.mx')
+    auth_key = 'YOUR AUTH KEY'
+    secret = 'YOUR SECRET HERE'
+    client = ApiClient(auth_key, secret)
 
     print '-------------------------get depth--------------------------------------'
     print client.exchange_depth('BTCUSD', 10)
@@ -141,14 +142,14 @@ if __name__ == '__main__':
     print '-------------------------list active orders-----------------------------'
     print client.list_active_orders()
 
-    print '-------------------------create new limit order-------------------------'
-    order = client.create_order(amount=1, cost=1, order_type='BUY', platform='BTCUSD')
-    order2 = client.create_order(amount=0.5, cost=1, order_type='SELL', platform='BTCUSD')
-    print order
+    #print '-------------------------create new limit order-------------------------'
+    #order = client.create_order(amount=1, cost=1, order_type='BUY', platform='BTCUSD')
+    #order2 = client.create_order(amount=0.5, cost=1, order_type='SELL', platform='BTCUSD')
+    #print order
 
-    print '-------------------------removing new order ----------------------------'
-    print client.remove_order(order['order_id'])
-    print client.remove_order(order2['order_id'])
+    #print '-------------------------removing new order ----------------------------'
+    #print client.remove_order(order['order_id'])
+    #print client.remove_order(order2['order_id'])
 
     print '-------------------------trader info----------------------------'
     print client.trader_info()
