@@ -142,14 +142,9 @@ if __name__ == '__main__':
     print '-------------------------list active orders-----------------------------'
     print client.list_active_orders()
 
-    #print '-------------------------create new limit order-------------------------'
-    #order = client.create_order(amount=1, cost=1, order_type='BUY', platform='BTCUSD')
-    #order2 = client.create_order(amount=0.5, cost=1, order_type='SELL', platform='BTCUSD')
-    #print order
-
-    #print '-------------------------removing new order ----------------------------'
-    #print client.remove_order(order['order_id'])
-    #print client.remove_order(order2['order_id'])
+    print '-------------------------create new limit order-------------------------'
+    order = client.create_order(amount=1, cost=1, order_type='BUY', platform='BTCUSD')
+    print client.remove_order(order['order_id'])
 
     print '-------------------------trader info----------------------------'
     print client.trader_info()
